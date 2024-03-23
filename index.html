@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wanderer v0.2</title>
+<style>
+  body{
+    overflow:hidden;
+    margin:0;
+    padding:0;
+    background-color: black;
+    image-rendering: pixelated;
+  }
+  #gameWindow {
+    width: 100vw;
+    height: 100vw;
+    background-image: url('path1.png');
+    background-repeat: no-repeat;
+    background-size: 100vw 100vw;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 4px solid red;
+    top:0;
+    left:0;
+  }
+  #character {
+    width: 100vw;
+    height: 100vw;
+    background-image: url('sprite1.png');
+    background-size: 100vw 100vw;
+    position: absolute;
+  }
+
+  #controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50vw;
+  height: 50vw;
+  margin: 00px;
+}
+
+button {
+  background-color: black;
+  color: white;
+  border: 3px solid red;
+  width: 20vw;
+  height: 20vw;
+  border-radius: 20vw;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+#up {
+  position: absolute;
+  top: 0;
+}
+
+#down {
+  position: absolute;
+  bottom: 0;
+}
+
+#left {
+  position: absolute;
+  left: 0;
+}
+
+#right {
+  position: absolute;
+  right: 0;
+}
+
+#a {
+  position: absolute;
+  right: 21vw;
+  bottom: 0;
+}
+
+#b {
+  position: absolute;
+  right: 0;
+  bottom:21vw;
+}
+
+</style>
+</head>
+
+
+<body>
+<div id="gameWindow">
+  <div id="character"></div>
+</div>
+<div id="controls">
+<button id="left" onclick="move('left')" onmousedown="end();start('left');" onmouseup="end()">Left</button>
+<button id="right" onclick="move('right')" onmousedown="end();start('right');" onmouseup="end()">Right</button>
+<button id="up" onclick="move('up')" onmousedown="end();start('up');" onmouseup="end()">Up</button>
+<button id="down" onclick="move('down')" onmousedown="end();start('down');" onmouseup="end()">Down</button>
+</div>
+<button id="a" onclick="console.log('gotta add some more code...')">A</button>
+<button id="b" onclick="alert('Game paused.')">B</button>
+
+<script>
+  var character = document.getElementById('character');
+  var gameWindow = document.getElementById('gameWindow');
+  var currentPos = { x: 0, y: 0 };
+  var spriteToggle = false;
+  var counter;
+
+  function start(direction) {
+    counter = setInterval(function() {
+        move(direction);
+    }, 100);
+  }
+  function end() {
+    clearInterval(counter);
+  };
+
+  function move(direction) {
+    var step = 10;
+    switch (direction) {
+      case 'left':
+        currentPos.x -= step;
+        break;
+      case 'right':
+        currentPos.x += step;
+        break;
+      case 'up':
+        currentPos.y -= step;
+        break;
+      case 'down':
+        currentPos.y += step;
+        break;
+    }
+    updateCharacter();
+    console.log(currentPos);
+  }
+
+  function updateCharacter() {
+    character.style.left = currentPos.x + 'px';
+    character.style.top = currentPos.y + 'px';
+    toggleSprite();
+    checkBounds();
+  }
+
+  function toggleSprite() {
+    spriteToggle = !spriteToggle;
+    character.style.backgroundImage = spriteToggle ? "url('sprite2.png')" : "url('sprite1.png')";
+  }
+
+  function newchunk(){
+    var randmap = Math.floor(Math.random() * 3) + 1;
+    gameWindow.style.backgroundImage = "url('path"+randmap+".png')";
+  };
+
+  function checkBounds() {
+    if (currentPos.x < -230 ) {
+        currentPos.x = 230;
+        newchunk();
+    };
+    if (currentPos.x > 230 ) {
+        currentPos.x = -230;
+        newchunk();
+    };
+    if (currentPos.y < -230 ) {
+        currentPos.y = 230;
+        newchunk();
+    };
+    if (currentPos.y > 230 ) {
+        currentPos.y = -230;
+        newchunk();
+    };
+  }
+
+  setInterval(toggleSprite, 5000); 
+</script>
+</body>
+</html>
